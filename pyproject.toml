@@ -10,7 +10,9 @@ requires-python = ">=3.12"
 dependencies = [
     "fastapi (>=0.115.8,<0.116.0)",
     "uvicorn (>=0.34.0,<0.35.0)",
-    "pandas (>=2.2.3,<3.0.0)"
+    "pandas (>=2.2.3,<3.0.0)",
+    "notebook (>=7.3.2,<8.0.0)",
+    "graphviz (>=0.20.3,<0.21.0)"
 ]
 
 
