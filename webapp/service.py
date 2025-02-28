@@ -108,11 +108,12 @@ def rec_news(user_id: str,
             .loc[recommended_items]
             .assign(similarity=similarities[recommended_indices])
             .sort_values(['similarity', 'recency_score', 'popularity_score'], ascending=[False, False, False])
+            .reset_index()
             .head(top_k)
         )
     else:
         return (
-            news_item.set_index('history')
+            news_item
             .sort_values(['popularity_score', 'recency_score'], ascending=[False, False])
             .head(top_k)
         )

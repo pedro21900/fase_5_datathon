@@ -1,2 +1,13 @@
 ./data/files
 ./data/itens
+/.idea/dataSources.xml
+/data/raw/itens/itens/itens-parte1.csv
+/data/raw/itens/itens/itens-parte2.csv
+/data/raw/itens/itens/itens-parte3.csv
+/data/raw/files/treino/treino_parte1.csv
+/data/raw/files/treino/treino_parte2.csv
+/data/raw/files/treino/treino_parte3.csv
+/data/raw/files/treino/treino_parte4.csv
+/data/raw/files/treino/treino_parte5.csv
+/data/raw/files/treino/treino_parte6.csv
+/data/refined/datawarehouse.db
