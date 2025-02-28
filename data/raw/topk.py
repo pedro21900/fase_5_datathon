@@ -23,7 +23,7 @@ for fpath in glob.glob('./treino/*.csv'):
         )
         histories[user].update(hist)
 
-df_test = pd.read_csv('./validacao.csv')
+df_test = pd.read_csv('validacao.csv')
 k = 10
 print('userId', 'acessos_futuros', sep=',')
 for user in set(df_test.userId):

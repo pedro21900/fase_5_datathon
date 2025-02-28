@@ -5,7 +5,8 @@ Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/hello/User
+GET http://localhost:8000/hello/e2ea40933f782f036277b6e250eb26a9d5e30ac17069806d206bcd48bcd7fa59?top_k=5
+
 Accept: application/json
 
 ###
