@@ -13,7 +13,8 @@ colunas = ['history', 'url', 'issued', 'modified', 'title', 'body', 'caption',
            'recency_score', 'popularity_score']
 
 # Carregar as tabelas 'merged_data' e 'news_item' no pandas
-merged = pd.read_sql_table('merged_data', con=engine)
+# merged = pd.read_sql_table('merged_data', con=engine)
+user_historys = pd.read_sql_table('user_historys', con=engine)
 news_item = pd.read_sql_table('news_item', con=engine)
 
 logging.info("Dado preparados com sucesso!")
