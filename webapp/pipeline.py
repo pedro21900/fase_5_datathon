@@ -1,11 +1,11 @@
 from sklearn.decomposition import TruncatedSVD
 
-from webapp.repository import news_item, merged
-from webapp.service import rec_news, created_sparse_matriz
+from webapp.repository import news_item, user_historys
+from webapp.service import rec_news, created_sparse_matriz, recomendar_noticias_por_cluster
 import pandas as pd
 
 # Geração da matriz de interação esparsa
-user_id_category, history_id_category, interaction_matrix = created_sparse_matriz(merged)
+user_id_category, history_id_category, interaction_matrix = created_sparse_matriz(user_historys.reset_index())
 
 # Aplicação do SVD para decomposição dos fatores
 svd = TruncatedSVD(n_components=2)
@@ -36,4 +36,18 @@ def rec_system_popularity_and_svd(user_id: str, history_is_large: bool, top_k: i
         top_k=top_k,
         top_p=top_p
     )
+
+
+def recomendar_noticias_por_cluster_filter(user_id, is_history=True, top_k=None, top_p=None):
+    if is_history:
+        _, cluster_news = recomendar_noticias_por_cluster(user_id, user_historys, top_p)
+        news = news_item.set_index('page').loc[cluster_news]
+        top_k = min(top_k or len(news), len(news))
+        return news.head(top_k)
+    else:
+        return (
+            news_item
+            .sort_values(['popularity_score', 'recency_score'], ascending=[False, False])
+            .head(top_k)
+        )
 

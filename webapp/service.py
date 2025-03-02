@@ -104,7 +104,7 @@ def rec_news(user_id: str,
             return pd.DataFrame()
 
         return (
-            news_item.set_index('history')
+            news_item.set_index('page')
             .loc[recommended_items]
             .assign(similarity=similarities[recommended_indices])
             .sort_values(['similarity', 'recency_score', 'popularity_score'], ascending=[False, False, False])
@@ -117,3 +117,20 @@ def rec_news(user_id: str,
             .sort_values(['popularity_score', 'recency_score'], ascending=[False, False])
             .head(top_k)
         )
+
+
+def recomendar_noticias_por_cluster(user_id, user_historys, top_p=None):
+    # Encontrar o cluster do usuário
+    user_cluster = user_historys[user_historys['userId'] == user_id]['cluster'].values[0]
+
+    # Obter usuários no mesmo cluster
+    similar_users_cluster = user_historys[user_historys['cluster'] == user_cluster]['userId'].unique()
+
+    top_p = min(top_p or len(similar_users_cluster), len(similar_users_cluster))
+
+    # Obter notícias consumidas pelos usuários do cluster
+    similar_users_cluster_news = user_historys[user_historys['userId'].isin(similar_users_cluster[:top_p])][
+        'history'].unique()
+
+    return similar_users_cluster, similar_users_cluster_news
+
