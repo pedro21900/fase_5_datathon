@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Query
 from webapp.pipeline import rec_system_svd, recomendar_noticias_por_cluster_filter
 
-app = FastAPI()
+app = FastAPI(openapi_url="/openapi.json")
 
 
 @app.get("/predict/factory_matrix_svd/{user_id}")
