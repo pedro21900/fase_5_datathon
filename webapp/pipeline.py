@@ -1,7 +1,7 @@
 from sklearn.decomposition import TruncatedSVD
 
 from webapp.repository import news_item, user_historys
-from webapp.service import rec_news, created_sparse_matriz, recomendar_noticias_por_cluster
+from webapp.service import recomendar_noticias_por_svd, created_sparse_matriz, recomendar_noticias_por_cluster
 import pandas as pd
 
 # Geração da matriz de interação esparsa
@@ -13,7 +13,7 @@ user_factors = svd.fit_transform(interaction_matrix)
 item_factors = svd.components_.T
 
 
-def rec_system_popularity_and_svd(user_id: str, history_is_large: bool, top_k: int,top_p: int) -> pd.DataFrame:
+def rec_system_svd(user_id: str, history_is_large: bool, top_k: int, top_p: int) -> pd.DataFrame:
     """
     Sistema de recomendação híbrido utilizando popularidade e SVD.
 
@@ -25,7 +25,7 @@ def rec_system_popularity_and_svd(user_id: str, history_is_large: bool, top_k: i
     Returns:
         pd.DataFrame: DataFrame com as notícias recomendadas.
     """
-    return rec_news(
+    return recomendar_noticias_por_svd(
         user_id,
         user_id_category,
         news_item,
@@ -39,6 +39,18 @@ def rec_system_popularity_and_svd(user_id: str, history_is_large: bool, top_k: i
 
 
 def recomendar_noticias_por_cluster_filter(user_id, is_history=True, top_k=None, top_p=None):
+    """
+    Recomenda notícias para um usuário com base em seu histórico ou na popularidade e atualidade.
+
+    Parâmetros:
+    user_id (int): ID do usuário para quem as notícias serão recomendadas.
+    is_history (bool, opcional): Define se a recomendação será baseada no histórico do usuário. Padrão é True.
+    top_k (int, opcional): Número máximo de notícias a serem retornadas. Se None, retorna todas disponíveis.
+    top_p (float, opcional): Parâmetro para filtragem baseada em probabilidade no histórico do usuário.
+
+    Retorna:
+    pandas.DataFrame: DataFrame contendo as notícias recomendadas.
+    """
     if is_history:
         _, cluster_news = recomendar_noticias_por_cluster(user_id, user_historys, top_p)
         news = news_item.set_index('page').loc[cluster_news]
@@ -50,4 +62,5 @@ def recomendar_noticias_por_cluster_filter(user_id, is_history=True, top_k=None,
             .sort_values(['popularity_score', 'recency_score'], ascending=[False, False])
             .head(top_k)
         )
+
 

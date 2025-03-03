@@ -63,15 +63,15 @@ def created_sparse_matriz(df: pd.DataFrame) -> tuple:
     return user_id_category, history_id_category, interaction_matrix
 
 
-def rec_news(user_id: str,
-             user_id_category: pd.Categorical,
-             news_item: pd.DataFrame,
-             history_id_category: pd.Categorical,
-             user_factors: csr_matrix,
-             item_factors: csr_matrix,
-             history_size_small: bool = False,
-             top_k: int = 5,
-             top_p: int = None) -> pd.DataFrame:
+def recomendar_noticias_por_svd(user_id: str,
+                                user_id_category: pd.Categorical,
+                                news_item: pd.DataFrame,
+                                history_id_category: pd.Categorical,
+                                user_factors: csr_matrix,
+                                item_factors: csr_matrix,
+                                history_size_small: bool = False,
+                                top_k: int = 5,
+                                top_p: int = None) -> pd.DataFrame:
     """
     Gera recomendações de itens (notícias) para o usuário com base na similaridade de cosseno.
 
@@ -120,6 +120,28 @@ def rec_news(user_id: str,
 
 
 def recomendar_noticias_por_cluster(user_id, user_historys, top_p=None):
+    """
+    Recomenda notícias com base no cluster ao qual o usuário pertence.
+
+    Args:
+        user_id (int): Identificador único do usuário para o qual as recomendações serão feitas.
+        user_historys (pd.DataFrame): DataFrame contendo o histórico de usuários, incluindo os campos:
+            - 'userId' (int): Identificador do usuário.
+            - 'cluster' (int): Cluster ao qual o usuário pertence.
+            - 'history' (list): Lista de notícias consumidas pelo usuário.
+        top_p (int, opcional): Número máximo de usuários similares considerados na recomendação.
+            Se None, usa todos os usuários do cluster.
+
+    Returns:
+        tuple: Uma tupla contendo:
+            - np.ndarray: Lista de IDs de usuários no mesmo cluster.
+            - np.ndarray: Lista única de notícias consumidas pelos usuários do cluster.
+
+    Raises:
+        KeyError: Se o 'userId' informado não existir no DataFrame.
+        IndexError: Se o usuário não estiver associado a um cluster.
+    """
+
     # Encontrar o cluster do usuário
     user_cluster = user_historys[user_historys['userId'] == user_id]['cluster'].values[0]
 
@@ -133,4 +155,5 @@ def recomendar_noticias_por_cluster(user_id, user_historys, top_p=None):
         'history'].unique()
 
     return similar_users_cluster, similar_users_cluster_news
+
 

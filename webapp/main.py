@@ -1,11 +1,11 @@
 from fastapi import FastAPI, HTTPException, Query
-from webapp.pipeline import rec_system_popularity_and_svd, recomendar_noticias_por_cluster_filter
+from webapp.pipeline import rec_system_svd, recomendar_noticias_por_cluster_filter
 
 app = FastAPI()
 
 
 @app.get("/predict/factory_matrix_svd/{user_id}")
-async def rec_news(
+async def factory_matrix_svd(
         user_id: str,
         top_k: int = Query(5, ge=1, le=50),
         top_p: int = Query(None, ge=5),
@@ -22,7 +22,7 @@ async def rec_news(
     - JSON com a lista de itens recomendados.
     """
     try:
-        recs = rec_system_popularity_and_svd(
+        recs = rec_system_svd(
             user_id=user_id,
             top_k=top_k,
             top_p=top_p,
